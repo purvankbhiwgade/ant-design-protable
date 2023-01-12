@@ -1,11 +1,11 @@
 export interface schema {
   id?: string;
-  title: string;
-  description: string;
-  dueDate: string;
-  timestamp: string;
-  tags: string[];
-  status: string;
+  title?: string;
+  description?: string;
+  dueDate?: string;
+  timestamp?: string;
+  tags?: string[];
+  status?: string;
 }
 
 export type noteContextType = {

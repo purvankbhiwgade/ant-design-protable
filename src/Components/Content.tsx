@@ -3,18 +3,23 @@ import { Button, DatePicker, Form, Input } from "antd";
 import Tags from "./Tags.js";
 import Status from "./Status.js";
 import { useContext, useState } from "react";
-import noteContext from "./context/NoteContext.js";
+import noteContext from "../context/NoteContext.js";
+import { noteContextType, schema } from "../@types/antd-table.js";
 
 // gagaga
 
 export default function Content() {
-  const context = useContext(noteContext);
-  const { addData } = context;
+  // const context = useContext(noteContext);
+  // const { addData } = context;
+
+  const { addData } = React.useContext(
+    noteContext
+  ) as noteContextType;
 
   const [form] = Form.useForm();
   //console.log(form);
 
-  const [newData, setNewData] = useState({
+  const [newData, setNewData] = useState<schema>({
     title: "",
     description: "",
     dueDate: "",
@@ -25,20 +30,20 @@ export default function Content() {
 
   const [dateValue, setDateValue] = useState(null);
 
-  const handleClick = (e) => {
+  const handleClick = (e:any) => {
     e.preventDefault();
     // console.log(form.getFieldsValue());
     const currentValue = form.getFieldsValue();
     delete currentValue[""];
     console.log(currentValue, "current val");
-    const dummy = {
+    const dummy: schema = {
       ...newData,
       title: currentValue.title,
       description: currentValue.description,
       // dueDate: `${currentValue.$D}-${currentValue.$M + 1}-${currentValue.$y}`,
       timestamp: Date()
     };
-    delete dummy[""];
+    // delete dummy[""];
     //yaay
     console.log(dummy, "dummy");
     setNewData(dummy);
@@ -46,12 +51,12 @@ export default function Content() {
     // setNewData({ title: "", description: "", dueDate: "" });
   };
 
-  const onChange = (e) => {
+  const onChange = (e: any) => {
     setNewData({ ...newData, [e.target.name]: e.target.value });
     // console.log(e.target.value);
   };
 
-  const handleDateUpdate = (e) => {
+  const handleDateUpdate = (e: any) => {
     console.log(e);
     if (e !== null) {
       console.log(`${e.$D}-${e.$M + 1}-${e.$y}`);
@@ -102,7 +107,7 @@ export default function Content() {
       >
         <DatePicker
           onChange={handleDateUpdate}
-          value={newData.dueDate}
+          // value={newData.dueDate}
           picker="date"
           placeholder="choose due date"
         />

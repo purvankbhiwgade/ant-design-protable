@@ -19,13 +19,15 @@ import {
   Radio,
   Select,
 } from "antd";
-import Content from "./Content.js";
+import Content from "./Components/Content.js";
 import NoteState from "./context/NoteState";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import noteContext from "./context/NoteContext";
-import EditNote from "./EditNote";
+import EditNote from "./Components/EditNote";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { noteContextType, schema } from "./@types/antd-table";
+import ToolBar from "./Components/ToolBar";
+import AddForm from "./Components/AddForm";
 
 // type GithubIssueItem = {
 //   id: string;
@@ -69,7 +71,9 @@ export default function App() {
   const [editingStudent, setEditingStudent] = useState(null);
   const [data, setData] = useState([]);
 
-  const context: noteContextType | null = useContext(noteContext);
+  const { table, getData, deleteData } = React.useContext(
+    noteContext
+  ) as noteContextType;
   // const {
   //   table,
   //   getData,
@@ -77,10 +81,6 @@ export default function App() {
   //   // filterState: { searchQuery },
   //   // filterDispatch
   // } = context || {};
-
-  const { table, getData, deleteData } = React.useContext(
-    noteContext
-  ) as noteContextType;
 
   // const transformProducts = () => {
   //   let sortedProducts = table;
@@ -116,8 +116,10 @@ export default function App() {
         ],
       },
       sorter: (record1, record2) => {
-        if (record1.title > record2.title) {
-          return 1;
+        if (record1.title && record2.title) {
+          if (record1.title > record2.title) {
+            return 1;
+          }
         }
         return -1;
       },
@@ -126,22 +128,25 @@ export default function App() {
       title: "Timestamp",
       dataIndex: "timestamp",
       sorter: (record1, record2) => {
-        if (record1.timestamp > record2.timestamp) {
-          return 1;
+        if (record1.timestamp && record2.timestamp) {
+          if (record1.timestamp > record2.timestamp) {
+            return 1;
+          }
         }
         return -1;
       },
       // sorter: true,
-      render: (_, { timestamp }) => <p>{timestamp.slice(4, 15)}</p>,
+      render: (_, { timestamp }) => <p>{timestamp?.slice(4, 15)}</p>,
       search: false,
     },
     {
       title: "Description",
       dataIndex: "description",
       sorter: (record1, record2) => {
+        if(record1.description && record2.description){
         if (record1.description > record2.description) {
           return 1;
-        }
+        }}
         return -1;
       },
       search: false,
@@ -150,9 +155,10 @@ export default function App() {
       title: "Due Date",
       dataIndex: "dueDate",
       sorter: (record1, record2) => {
+        if(record1.dueDate && record2.dueDate){
         if (record1.dueDate > record2.dueDate) {
           return 1;
-        }
+        }}
         return -1;
       },
       search: false,
@@ -183,15 +189,15 @@ export default function App() {
         return <SearchOutlined />;
       },
       onFilter: (value, record) => {
-        return record.tags.find((val) => val === value) !== undefined;
+        return record.tags?.find((val) => val === value) !== undefined;
       },
 
       // render method is used to manage the rendering of the values
       // in the columns
       render: (_, { id, tags }) => (
         <>
-          {tags.map((tag) => {
-            console.log(id);
+          {tags?.map((tag) => {
+            // console.log(id);
             let color = tag.length > 5 ? "geekblue" : "green";
             let tagName = tag.length > 8 ? tag.slice(0, 8) : tag;
             if (tagName === "loser") {
@@ -300,15 +306,33 @@ export default function App() {
         // ************ Settings Section of the Table ***********
         // includes the button to "Add a new value", "refresh the tab",
         //  "increase the page size", "go to the setting"
-        // headerTitle="advanced form"
-        // toolBarRender={() => [
-        //   // Popover creates a floating card
-        //   <Popover content={<Content />} title="Title" trigger="click">
-        //     <Button key="button" icon={<PlusOutlined />} type="primary">
-        //       new
-        //     </Button>
-        //   </Popover>,
-        // ]}
+        headerTitle="advanced form"
+        toolBarRender={() => [
+          // Popover creates a floating card
+          // <Popover content={<Content />} title="Title" trigger="click">
+          //   <Button key="button" icon={<PlusOutlined />} type="primary">
+          //     new
+          //   </Button>
+          // </Popover>
+        ]}
+        toolbar={{
+          actions: [
+            // <Button
+            //   key="key"
+            //   type="primary"
+            //   onClick={() => {
+            //     alert('add');
+            //   }}
+            // >
+            //   add
+            // </Button>,
+            <Popover content={<AddForm />} title="Title" trigger="click">
+              <Button key="button" icon={<PlusOutlined />} type="primary">
+                new
+              </Button>
+            </Popover>,
+          ],
+        }}
       />
 
       {/* <Modal
