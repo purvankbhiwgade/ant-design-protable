@@ -4,7 +4,7 @@ import {
   SearchOutlined,
 } from "@ant-design/icons";
 import "./styles.css";
-import { ProTable, TableDropdown } from "@ant-design/pro-components";
+import { createIntl, ProTable, TableDropdown } from "@ant-design/pro-components";
 import type { ActionType, ProColumns } from "@ant-design/pro-components";
 import {
   Button,
@@ -28,7 +28,9 @@ import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { noteContextType, schema } from "./@types/antd-table";
 import ToolBar from "./Components/ToolBar";
 import AddForm from "./Components/AddForm";
-
+import EditForm from "./Components/EditForm";
+import { ConfigProvider } from 'antd' ; 
+import enUS from 'antd/locale/en_US';
 // type GithubIssueItem = {
 //   id: string;
 //   title: string;
@@ -136,7 +138,7 @@ export default function App() {
         return -1;
       },
       // sorter: true,
-      render: (_, { timestamp }) => <p>{timestamp?.slice(4, 15)}</p>,
+      render: (_, { timestamp }) => <p>{timestamp}</p>,
       search: false,
     },
     {
@@ -231,7 +233,7 @@ export default function App() {
       title: "Edit",
       dataIndex: "Edit",
       search: false,
-      render: (record) => {
+      render: (record, {id}) => {
         return (
           <>
             <EditOutlined
@@ -284,8 +286,24 @@ export default function App() {
   //   setEditingStudent(null);
   // };
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+
   return (
-    <div className="App">
+    <ConfigProvider
+    locale={enUS}
+>
       {
         // All the values are passed as props to ProTable component
         // Protable has a built-in search bar, add new data button and the table
@@ -307,91 +325,24 @@ export default function App() {
         // includes the button to "Add a new value", "refresh the tab",
         //  "increase the page size", "go to the setting"
         headerTitle="advanced form"
-        toolBarRender={() => [
-          // Popover creates a floating card
-          // <Popover content={<Content />} title="Title" trigger="click">
-          //   <Button key="button" icon={<PlusOutlined />} type="primary">
-          //     new
-          //   </Button>
-          // </Popover>
-        ]}
         toolbar={{
           actions: [
-            // <Button
-            //   key="key"
-            //   type="primary"
-            //   onClick={() => {
-            //     alert('add');
-            //   }}
-            // >
-            //   add
-            // </Button>,
-            <Popover content={<AddForm />} title="Title" trigger="click">
-              <Button key="button" icon={<PlusOutlined />} type="primary">
-                new
-              </Button>
-            </Popover>,
+            // <Popover content={<AddForm />} title="Title" trigger="click">
+            //   <Button key="button" icon={<PlusOutlined />} type="primary">
+            //     new
+            //   </Button>
+            // </Popover>,
+            <>
+            <Button key="button" icon={<PlusOutlined />} type="primary" onClick={showModal}>
+                 new
+               </Button>
+               <Modal title="Basic Modal" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+               <AddForm />
+             </Modal>
+             </>
           ],
         }}
       />
-
-      {/* <Modal
-        title="Edit Task"
-        visible={isEditing}
-        okText="Save"
-        onCancel={() => {
-          resetEditing();
-        }}
-        onOk={() => {
-          setData((pre) => {
-            return pre.map((data) => {
-              if (data.id === table.id) {
-                return editingStudent;
-              } else {
-                return data;
-              }
-            });
-          });
-          resetEditing();
-        }}
-      >
-        <hr />
-        <label>
-          <h6>Title</h6>
-        </label>
-        <Input
-          value={table?.title}
-          onChange={(e) => {
-            setEditingStudent((pre) => {
-              return { ...pre, name: e.target.value };
-            });
-          }}
-        />
-
-        <label>
-          <h6>Description</h6>
-        </label>
-        <Input
-          value={table?.description}
-          onChange={(e) => {
-            setEditingStudent((pre) => {
-              return { ...pre, email: e.target.value };
-            });
-          }}
-        />
-
-        <label>
-          <h6>Due Date</h6>
-        </label>
-        <Input
-          value={table?.dueDate}
-          onChange={(e) => {
-            setEditingStudent((pre) => {
-              return { ...pre, address: e.target.value };
-            });
-          }}
-        />
-      </Modal> */}
-    </div>
+    </ConfigProvider>
   );
 }

@@ -66,9 +66,8 @@ export default function AddForm() {
       timestamp: dayjs().format("DD-MM-YYYY")
     });
     console.log(newData)
-    addData(newData)
-    
-    // form.resetFields();
+    addData(newData)  
+    form.resetFields();
   };
 
   const handleAllTag = (allTags: string[]) => {

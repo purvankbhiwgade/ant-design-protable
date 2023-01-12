@@ -11,6 +11,7 @@
   "dependencies": {
     "@ant-design/icons": "^5.0.0",
     "@ant-design/pro-components": "^2.3.52",
+    "@ant-design/pro-provider": "^2.4.0",
     "@types/antd": "^1.0.0",
     "antd": "^5.1.4",
     "dayjs": "^1.11.7",
