@@ -13,21 +13,14 @@ interface formFields {
   status: any;
 }
 
-export default function AddForm() {
+interface AddFormProps {
+  handleAddForm(arg0:void): void;
+}
+
+export default function AddForm({handleAddForm}: AddFormProps) {
   const { addData } = React.useContext(noteContext) as noteContextType;
   const [form] = Form.useForm();
   const [newData, setNewData] = useState<schema>({ status: "open", tags: [] });
-  //   useEffect(() => {
-  //     setNewData({
-  //         id: "",
-  //         title: "",
-  //         description: "",
-  //         dueDate: "",
-  //         timestamp: "",
-  //         tags: [],
-  //         status: "",
-  //       })
-  //   }, [newData])
 
   const [dateValue, setDateValue] = useState(null);
   const handleClick = (e: any) => {
@@ -48,6 +41,7 @@ export default function AddForm() {
 
   const onReset = () => {
     form.resetFields();
+    handleAddForm();
   };
 
   const tailLayout = {
@@ -68,6 +62,7 @@ export default function AddForm() {
     console.log(newData)
     addData(newData)  
     form.resetFields();
+    handleAddForm();
   };
 
   const handleAllTag = (allTags: string[]) => {
@@ -95,20 +90,15 @@ export default function AddForm() {
         rules={[{ required: true }, { type: "string", max: 100 }]}
       >
         <Input
-          //   onChange={onChange}
-          value={newData.title}
           placeholder="input placeholder"
         />
       </Form.Item>
       <Form.Item
         name="description"
         label="Description"
-        //help="Max 1000 characters"
         rules={[{ required: true }, { type: "string", max: 1000 }]}
       >
         <Input
-          //   onChange={onChange}
-          value={newData.description}
           placeholder="input placeholder"
         />
       </Form.Item>
@@ -118,8 +108,6 @@ export default function AddForm() {
         rules={[{ required: true }, { type: "date" }]}
       >
         <DatePicker
-          //   onChange={handleDateUpdate}
-          //   value={dayjs(newData.timestamp, "DD-MM-YYYY")}
           picker="date"
           placeholder="choose due date"
         />
@@ -127,23 +115,17 @@ export default function AddForm() {
       <Form.Item
         name="tags"
         label="Tags"
-        //help="Max 1000 characters"
         rules={[{ required: false }]}
       >
         <Tags newData={newData} handleAllTag={handleAllTag} handleOneTag={handleOneTag}/>
       </Form.Item>
       <Form.Item name="status" label="Status" rules={[{ required: true }]}>
         <Status
-          //   newData={newData}
-          //   setNewData={setNewData}
           onChange={handleStatusChange}
           value={newData?.status}
         />
       </Form.Item>
       <Form.Item {...tailLayout}>
-        {/* <Button type="primary" onClick={handleClick}>
-          Submit
-        </Button> */}
         <Button type="primary" htmlType="submit">
           Submit
         </Button>

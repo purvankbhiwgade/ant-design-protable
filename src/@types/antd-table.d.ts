@@ -12,5 +12,5 @@ export type noteContextType = {
   table: schema[];
   addData: (schema) => void;
   getData: () => void;
-  deleteData: (string) => void;
+  deleteData: (number) => void;
 };

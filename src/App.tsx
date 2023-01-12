@@ -4,7 +4,11 @@ import {
   SearchOutlined,
 } from "@ant-design/icons";
 import "./styles.css";
-import { createIntl, ProTable, TableDropdown } from "@ant-design/pro-components";
+import {
+  createIntl,
+  ProTable,
+  TableDropdown,
+} from "@ant-design/pro-components";
 import type { ActionType, ProColumns } from "@ant-design/pro-components";
 import {
   Button,
@@ -29,8 +33,8 @@ import { noteContextType, schema } from "./@types/antd-table";
 import ToolBar from "./Components/ToolBar";
 import AddForm from "./Components/AddForm";
 import EditForm from "./Components/EditForm";
-import { ConfigProvider } from 'antd' ; 
-import enUS from 'antd/locale/en_US';
+import { ConfigProvider } from "antd";
+import enUS from "antd/locale/en_US";
 // type GithubIssueItem = {
 //   id: string;
 //   title: string;
@@ -145,10 +149,11 @@ export default function App() {
       title: "Description",
       dataIndex: "description",
       sorter: (record1, record2) => {
-        if(record1.description && record2.description){
-        if (record1.description > record2.description) {
-          return 1;
-        }}
+        if (record1.description && record2.description) {
+          if (record1.description > record2.description) {
+            return 1;
+          }
+        }
         return -1;
       },
       search: false,
@@ -157,10 +162,11 @@ export default function App() {
       title: "Due Date",
       dataIndex: "dueDate",
       sorter: (record1, record2) => {
-        if(record1.dueDate && record2.dueDate){
-        if (record1.dueDate > record2.dueDate) {
-          return 1;
-        }}
+        if (record1.dueDate && record2.dueDate) {
+          if (record1.dueDate > record2.dueDate) {
+            return 1;
+          }
+        }
         return -1;
       },
       search: false,
@@ -233,7 +239,7 @@ export default function App() {
       title: "Edit",
       dataIndex: "Edit",
       search: false,
-      render: (record, {id}) => {
+      render: (record, { id }) => {
         return (
           <>
             <EditOutlined
@@ -286,24 +292,22 @@ export default function App() {
   //   setEditingStudent(null);
   // };
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isAddFormOpen, setIsAddFormOpen] = useState(false);
 
-  const showModal = () => {
-    setIsModalOpen(true);
+  const showAddForm = () => {
+    setIsAddFormOpen(true);
   };
 
-  const handleOk = () => {
-    setIsModalOpen(false);
-  };
+  // const handleAddFormOk = () => {
+  //   setIsAddFormOpen(false);
+  // };
 
-  const handleCancel = () => {
-    setIsModalOpen(false);
+  const handleAddForm = () => {
+    setIsAddFormOpen(false);
   };
 
   return (
-    <ConfigProvider
-    locale={enUS}
->
+    <ConfigProvider locale={enUS}>
       {
         // All the values are passed as props to ProTable component
         // Protable has a built-in search bar, add new data button and the table
@@ -325,6 +329,11 @@ export default function App() {
         // includes the button to "Add a new value", "refresh the tab",
         //  "increase the page size", "go to the setting"
         headerTitle="advanced form"
+        options={{
+          search: true,
+        }}
+        search={false}
+        rowKey="key"
         toolbar={{
           actions: [
             // <Popover content={<AddForm />} title="Title" trigger="click">
@@ -333,13 +342,23 @@ export default function App() {
             //   </Button>
             // </Popover>,
             <>
-            <Button key="button" icon={<PlusOutlined />} type="primary" onClick={showModal}>
-                 new
-               </Button>
-               <Modal title="Basic Modal" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
-               <AddForm />
-             </Modal>
-             </>
+              <Button
+                key="button"
+                icon={<PlusOutlined />}
+                type="primary"
+                onClick={showAddForm}
+              >
+                new
+              </Button>
+              <Modal
+                open={isAddFormOpen}
+                // onOk={handleAddFormOk}
+                // onCancel={handleAddFormCancel}
+                footer = {null}
+              >
+                <AddForm handleAddForm={handleAddForm}/>
+              </Modal>
+            </>,
           ],
         }}
       />
