@@ -63,8 +63,13 @@ const Tags = ({ newData, handleAllTag, handleOneTag }: tagsInterface) => {
       </span>
     );
   };
+
+  var tagChild=tags?.map(forMap);
+  useEffect(() => {
+    setTags(newData.tags)
+  }, [newData.tags])
   
-  const tagChild = tags?.map(forMap);
+   
   return (
     <>
       <div style={{ marginBottom: 16 }}>

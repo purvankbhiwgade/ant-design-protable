@@ -48,7 +48,16 @@ export default function AddForm({handleAddForm}: AddFormProps) {
     wrapperCol: { offset: 8, span: 16 },
   };
 
-  const onFinish = ({ title, description, dueDate, status }: formFields) => {
+  useEffect(() => {
+    if(newData.title !== undefined){
+      addData(newData)
+      setNewData({ status: "open", tags: [] })
+    }
+  }, [newData])
+  
+
+  const onFinish = () => {
+    const { title, description, dueDate, status } = form.getFieldsValue()
     var d = new Date(dueDate.$y, dueDate.$M + 1, dueDate.$D);
     console.log(dayjs(d));
     console.log(newData)
@@ -60,7 +69,6 @@ export default function AddForm({handleAddForm}: AddFormProps) {
       timestamp: dayjs().format("DD-MM-YYYY")
     });
     console.log(newData)
-    addData(newData)  
     form.resetFields();
     handleAddForm();
   };

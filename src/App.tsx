@@ -7,6 +7,7 @@ import "./styles.css";
 import {
   createIntl,
   ProTable,
+  recordKeyToString,
   TableDropdown,
 } from "@ant-design/pro-components";
 import type { ActionType, ProColumns } from "@ant-design/pro-components";
@@ -80,6 +81,20 @@ export default function App() {
   const { table, getData, deleteData } = React.useContext(
     noteContext
   ) as noteContextType;
+    
+  const [searchText, setSearchText] = useState<String>('');
+  const [searchedColumn, setSearchedColumn] = useState<String>('');
+
+  const handleSearch = (selectedKeys:React.Key[], confirm:(param?:any|undefined) => void, dataIndex:string) => {
+    confirm();
+    // setSearchText(selectedKeys[0]);
+    setSearchedColumn(dataIndex);
+  };
+
+  const handleReset = (clearFilters:(() => void) | undefined) => {
+    clearFilters !== undefined? clearFilters(): null;
+    setSearchText('');
+  };
   // const {
   //   table,
   //   getData,
@@ -129,6 +144,92 @@ export default function App() {
         }
         return -1;
       },
+      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+        <div style={{ padding: 8 }}>
+          <Input.Search
+            placeholder={`Search Title`}
+            value={selectedKeys[0]}
+            onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+            onSearch={() => {const dataIndex = 'title';
+            handleSearch(selectedKeys, confirm, dataIndex)}}
+            style={{ width: 188, marginBottom: 8, display: 'block' }}
+          />
+          <Button
+            type="primary"
+            onClick={() => {const dataIndex = 'title';
+            handleSearch(selectedKeys, confirm, dataIndex)}}
+            icon={<SearchOutlined />}
+            size="small"
+            style={{ width: 90, marginRight: 8 }}
+          >
+            Search
+          </Button>
+          <Button onClick={() => handleReset(clearFilters)} size="small" style={{ width: 90 }}>
+            Reset
+          </Button>
+        </div>
+      ),
+      filterIcon: filtered => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
+      onFilter: (value, record) =>
+        {
+          let a = record.title?.toLowerCase().includes(value.toString().toLowerCase())
+          return a===undefined? false: a
+        },
+      // onFilterDropdownVisibleChange: visible => {
+      //   if (visible) {
+      //     setTimeout(() => searchInput.select());
+      //   }
+      // },
+      // render: text =>
+      //   searchedColumn === 'title' ? (
+      //     <Highlight match={searchText}>{text}</Highlight>
+      //   ) : (
+      //     text
+      //   ),
+    },
+    {
+      title: "Description",
+      dataIndex: "description",
+      ellipsis: true,
+      sorter: (record1, record2) => {
+        if (record1.description && record2.description) {
+          if (record1.description > record2.description) {
+            return 1;
+          }
+        }
+        return -1;
+      },
+      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+        <div style={{ padding: 8 }}>
+          <Input.Search
+            placeholder={`Search Description`}
+            value={selectedKeys[0]}
+            onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+            onSearch={() => {const dataIndex = 'description';
+            handleSearch(selectedKeys, confirm, dataIndex)}}
+            style={{ width: 188, marginBottom: 8, display: 'block' }}
+            />
+          <Button
+            type="primary"
+            onClick={() => {const dataIndex = 'description';
+            handleSearch(selectedKeys, confirm, dataIndex)}}
+            icon={<SearchOutlined />}
+            size="small"
+            style={{ width: 90, marginRight: 8 }}
+            >
+            Search
+          </Button>
+          <Button onClick={() => handleReset(clearFilters)} size="small" style={{ width: 90 }}>
+            Reset
+          </Button>
+        </div>
+      ),
+      filterIcon: filtered => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
+      onFilter: (value, record) =>
+      {
+        let a = record.description?.toLowerCase().includes(value.toString().toLowerCase())
+        return a===undefined? false: a
+      },
     },
     {
       title: "Timestamp",
@@ -141,22 +242,39 @@ export default function App() {
         }
         return -1;
       },
-      // sorter: true,
       render: (_, { timestamp }) => <p>{timestamp}</p>,
-      search: false,
-    },
-    {
-      title: "Description",
-      dataIndex: "description",
-      sorter: (record1, record2) => {
-        if (record1.description && record2.description) {
-          if (record1.description > record2.description) {
-            return 1;
-          }
-        }
-        return -1;
+      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+        <div style={{ padding: 8 }}>
+          <Input.Search
+            placeholder={`Search timestamp`}
+            value={selectedKeys[0]}
+            onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+            onSearch={() => {const dataIndex = 'timestamp';
+            handleSearch(selectedKeys, confirm, dataIndex)}}
+            style={{ width: 188, marginBottom: 8, display: 'block' }}
+            />
+          <Button
+            type="primary"
+            onClick={() => {const dataIndex = 'timestamp';
+            handleSearch(selectedKeys, confirm, dataIndex)}}
+            icon={<SearchOutlined />}
+            size="small"
+            style={{ width: 90, marginRight: 8 }}
+            >
+            Search
+          </Button>
+          <Button onClick={() => handleReset(clearFilters)} size="small" style={{ width: 90 }}>
+            Reset
+          </Button>
+        </div>
+      ),
+      filterIcon: filtered => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
+      onFilter: (value, record) =>
+      {
+        // if(record.timestamp)
+        let a = record.timestamp?.toString().includes(value.toString().toLowerCase())
+        return a===undefined? false: a
       },
-      search: false,
     },
     {
       title: "Due Date",
@@ -170,6 +288,37 @@ export default function App() {
         return -1;
       },
       search: false,
+      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+        <div style={{ padding: 8 }}>
+          <Input.Search
+            placeholder={`Search due date`}
+            value={selectedKeys[0]}
+            onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+            onSearch={() => {const dataIndex = 'dueDate';
+            handleSearch(selectedKeys, confirm, dataIndex)}}
+            style={{ width: 188, marginBottom: 8, display: 'block' }}
+            />
+          <Button
+            type="primary"
+            onClick={() => {const dataIndex = 'dueDate';
+            handleSearch(selectedKeys, confirm, dataIndex)}}
+            icon={<SearchOutlined />}
+            size="small"
+            style={{ width: 90, marginRight: 8 }}
+            >
+            Search
+          </Button>
+          <Button onClick={() => handleReset(clearFilters)} size="small" style={{ width: 90 }}>
+            Reset
+          </Button>
+        </div>
+      ),
+      filterIcon: filtered => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
+      onFilter: (value, record) =>
+      {
+        let a = record.dueDate?.toString().includes(value.toString().toLowerCase())
+        return a===undefined? false: a
+      },
     },
     {
       title: "Tag",
@@ -281,7 +430,7 @@ export default function App() {
 
   useEffect(() => {
     getData();
-  }, [getData]);
+  }, [table]);
 
   // const onEditStudent = (record) => {
   //   setIsEditing(true);
@@ -329,10 +478,26 @@ export default function App() {
         // includes the button to "Add a new value", "refresh the tab",
         //  "increase the page size", "go to the setting"
         headerTitle="advanced form"
-        options={{
-          search: true,
-        }}
+        // options={{
+        //   search: true,
+        //   onSearch: (value:string) => 
+        // }}
         search={false}
+        // search={{
+        //   defaultCollapsed: false,
+        //   optionRender: (searchConfig, formProps, dom) => [
+        //     ...dom.reverse(),
+        //     <Button
+        //       key="out"
+        //       onClick={() => {
+        //         const values = searchConfig?.form?.getFieldsValue();
+        //         console.log(values);
+        //       }}
+        //     >
+        //       导出
+        //     </Button>,
+        //   ],
+        // }}
         rowKey="key"
         toolbar={{
           actions: [
@@ -353,7 +518,7 @@ export default function App() {
               <Modal
                 open={isAddFormOpen}
                 // onOk={handleAddFormOk}
-                // onCancel={handleAddFormCancel}
+                onCancel={handleAddForm}
                 footer = {null}
               >
                 <AddForm handleAddForm={handleAddForm}/>
