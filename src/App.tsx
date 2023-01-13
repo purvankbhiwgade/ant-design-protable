@@ -24,14 +24,11 @@ import {
   Radio,
   Select,
 } from "antd";
-import Content from "./Components/Content.js";
 import NoteState from "./context/NoteState";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import noteContext from "./context/NoteContext";
-import EditNote from "./Components/EditNote";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { noteContextType, schema } from "./@types/antd-table";
-import ToolBar from "./Components/ToolBar";
 import AddForm from "./Components/AddForm";
 import EditForm from "./Components/EditForm";
 import { ConfigProvider } from "antd";
