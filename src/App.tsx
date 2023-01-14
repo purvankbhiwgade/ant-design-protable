@@ -24,7 +24,6 @@ import {
   Radio,
   Select,
 } from "antd";
-import NoteState from "./context/NoteState";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import noteContext from "./context/NoteContext";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
